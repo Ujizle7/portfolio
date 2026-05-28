@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Prince Ndionyenmah — Data Analyst Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root {
+    --navy:    #0a0f1e;
+    --navy2:   #111827;
+    --navy3:   #1a2235;
+    --gold:    #c9a84c;
+    --gold2:   #e8c56d;
+    --gold3:   #f5e0a0;
+    --coral:   #e05c4b;
+    --teal:    #2dd4bf;
+    --white:   #f8f9fc;
+    --gray:    #94a3b8;
+    --gray2:   #64748b;
+    --border:  rgba(201,168,76,0.18);
+    --glass:   rgba(26,34,53,0.7);
+    --glow:    0 0 40px rgba(201,168,76,0.12);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── NOISE TEXTURE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 2px; }
+
+  /* ─── NAV ─── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 1.1rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(10,15,30,0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+  }
+  .nav-links { display: flex; gap: 2.2rem; list-style: none; }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--gold2); }
+
+  /* ─── SECTIONS ─── */
+  section { position: relative; z-index: 1; }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 7rem 3rem 4rem;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(201,168,76,0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 10% 80%, rgba(45,212,191,0.04) 0%, transparent 60%);
+  }
+  /* floating grid lines */
+  .hero-grid {
+    position: absolute; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+  }
+  .hero-inner { position: relative; z-index: 1; max-width: 1100px; margin: 0 auto; width: 100%; }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.6rem;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid var(--border);
+    padding: 0.35rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold2);
+    margin-bottom: 2rem;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.4)} }
+
+  h1.hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 8vw, 7rem);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    animation: fadeUp 0.8s 0.1s ease both;
+  }
+  h1.hero-name em {
+    font-style: italic;
+    color: var(--gold);
+    display: block;
+  }
+  .hero-title {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: var(--gray);
+    font-weight: 300;
+    margin-top: 1.2rem;
+    max-width: 620px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+  .hero-title strong { color: var(--teal); font-weight: 500; }
+  .hero-cta {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-top: 2.5rem;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s;
+    border: none;
+  }
+  .btn-primary { background: var(--gold); color: var(--navy); }
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.3); }
+  .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .btn-outline:hover { background: rgba(201,168,76,0.1); transform: translateY(-2px); }
+
+  .hero-stats {
+    display: flex; gap: 3rem; flex-wrap: wrap;
+    margin-top: 4rem;
+    padding-top: 2.5rem;
+    border-top: 1px solid var(--border);
+    animation: fadeUp 0.8s 0.4s ease both;
+  }
+  .hero-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat-label { font-size: 0.78rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+  /* floating data badges on right */
+  .hero-visual {
+    position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+    width: 420px;
+    animation: fadeUp 0.8s 0.5s ease both;
+  }
+  .data-badge {
+    position: absolute;
+    background: var(--glass);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.8rem 1.2rem;
+    font-size: 0.8rem;
+    color: var(--white);
+    box-shadow: var(--glow);
+    animation: float 4s ease-in-out infinite;
+  }
+  .data-badge .badge-val { font-family: 'DM Mono', monospace; font-size: 1.3rem; color: var(--gold); font-weight: 500; display: block; }
+  .data-badge.b1 { top: 20px; right: 60px; animation-delay: 0s; }
+  .data-badge.b2 { top: 140px; right: 20px; animation-delay: 1.2s; }
+  .data-badge.b3 { top: 260px; right: 80px; animation-delay: 0.6s; }
+  .data-badge.b4 { top: 370px; right: 30px; animation-delay: 1.8s; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  /* ─── SECTION SHARED ─── */
+  .section-inner { max-width: 1100px; margin: 0 auto; padding: 6rem 3rem; }
+  .section-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .section-sub { font-size: 1rem; color: var(--gray); max-width: 540px; line-height: 1.8; }
+  .divider { width: 48px; height: 2px; background: var(--gold); margin: 1.5rem 0 2.5rem; }
+
+  /* ─── ABOUT ─── */
+  #about { background: var(--navy2); }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; margin-top: 3rem; }
+  .about-text p { color: var(--gray); line-height: 1.9; margin-bottom: 1.2rem; }
+  .about-text p strong { color: var(--white); }
+  .about-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.5rem; }
+  .chip {
+    padding: 0.3rem 0.9rem;
+    border: 1px solid var(--border);
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    color: var(--gold2);
+    font-family: 'DM Mono', monospace;
+    background: rgba(201,168,76,0.06);
+  }
+  .about-highlights { display: flex; flex-direction: column; gap: 1.2rem; }
+  .highlight-card {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .highlight-card:hover { transform: translateX(4px); box-shadow: var(--glow); }
+  .highlight-card h4 { font-size: 0.9rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem; }
+  .highlight-card p { font-size: 0.82rem; color: var(--gray); line-height: 1.6; }
+  .highlight-card .hc-icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+
+  /* ─── STATS STRIP ─── */
+  #stats-strip {
+    background: linear-gradient(135deg, var(--navy3) 0%, #0d1526 100%);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 0; max-width: 1100px; margin: 0 auto;
+  }
+  .stat-box {
+    padding: 2.5rem 2rem;
+    text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat-box:last-child { border-right: none; }
+  .stat-box .snum {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-box .slabel { font-size: 0.72rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.3rem; }
+
+  /* ─── PROJECT ─── */
+  #project { background: var(--navy); }
+  .project-header { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem; margin-bottom: 3rem; }
+  .project-meta { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.8rem; }
+  .meta-tag { background: rgba(45,212,191,0.08); border: 1px solid rgba(45,212,191,0.2); color: var(--teal); padding: 0.25rem 0.8rem; border-radius: 3px; font-size: 0.72rem; font-family: 'DM Mono', monospace; }
+
+  /* KPI row */
+  .kpi-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; margin-bottom: 2.5rem; }
+  .kpi-card {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+  .kpi-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--gold);
+  }
+  .kpi-card.teal::after { background: var(--teal); }
+  .kpi-card.coral::after { background: var(--coral); }
+  .kpi-val { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; color: var(--gold); }
+  .kpi-card.teal .kpi-val { color: var(--teal); }
+  .kpi-card.coral .kpi-val { color: var(--coral); }
+  .kpi-label { font-size: 0.78rem; color: var(--gray); text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.3rem; }
+  .kpi-sub { font-size: 0.8rem; color: var(--gray2); margin-top: 0.6rem; }
+  .kpi-badge { position: absolute; top: 1rem; right: 1rem; font-size: 0.7rem; background: rgba(201,168,76,0.12); color: var(--gold); padding: 0.2rem 0.6rem; border-radius: 3px; font-family: 'DM Mono', monospace; }
+  .kpi-card.teal .kpi-badge { background: rgba(45,212,191,0.1); color: var(--teal); }
+  .kpi-card.coral .kpi-badge { background: rgba(224,92,75,0.1); color: var(--coral); }
+
+  /* charts grid */
+  .charts-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+  .charts-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; }
+  .chart-card {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+  }
+  .chart-card:hover { transform: translateY(-2px); }
+  .chart-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.3rem;
+  }
+  .chart-qnum { display: inline-block; background: rgba(201,168,76,0.1); color: var(--gold); font-size: 0.65rem; font-family: 'DM Mono', monospace; padding: 0.1rem 0.5rem; border-radius: 2px; margin-bottom: 0.8rem; }
+  .chart-canvas-wrap { position: relative; height: 200px; }
+  .chart-canvas-wrap.tall { height: 240px; }
+  .chart-canvas-wrap.short { height: 160px; }
+
+  /* insights */
+  .insights-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; margin-top: 1.5rem; }
+  .insight-item {
+    background: rgba(201,168,76,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    display: flex; gap: 0.8rem; align-items: flex-start;
+  }
+  .insight-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+  .insight-text { font-size: 0.83rem; color: var(--gray); line-height: 1.6; }
+  .insight-text strong { color: var(--gold2); }
+
+  /* ─── SKILLS ─── */
+  #skills { background: var(--navy2); }
+  .skills-outer { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 3rem; }
+  .skill-group h3 { font-size: 0.78rem; color: var(--gold); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1.5rem; }
+  .skill-item { margin-bottom: 1.4rem; }
+  .skill-header { display: flex; justify-content: space-between; margin-bottom: 0.5rem; }
+  .skill-name { font-size: 0.88rem; color: var(--white); font-weight: 500; }
+  .skill-pct { font-size: 0.78rem; color: var(--gold); font-family: 'DM Mono', monospace; }
+  .skill-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+  .skill-fill {
+    height: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--gold2));
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+  }
+  .skill-fill.teal { background: linear-gradient(90deg, var(--teal), #67e8f9); }
+  .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin-top: 1rem; }
+  .tool-pill {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--gray);
+    font-family: 'DM Mono', monospace;
+    transition: all 0.2s;
+  }
+  .tool-pill:hover { border-color: var(--gold); color: var(--gold2); background: rgba(201,168,76,0.06); }
+
+  /* ─── EXPERIENCE ─── */
+  #experience { background: var(--navy); }
+  .timeline { position: relative; margin-top: 3rem; }
+  .timeline::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 1px;
+    background: linear-gradient(to bottom, var(--gold), transparent);
+  }
+  .tl-item { padding-left: 2.5rem; padding-bottom: 3rem; position: relative; }
+  .tl-dot {
+    position: absolute; left: -5px; top: 5px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: 2px solid var(--navy);
+    box-shadow: 0 0 0 3px rgba(201,168,76,0.2);
+  }
+  .tl-dot.teal { background: var(--teal); box-shadow: 0 0 0 3px rgba(45,212,191,0.2); }
+  .tl-meta { font-size: 0.72rem; color: var(--gray2); font-family: 'DM Mono', monospace; margin-bottom: 0.4rem; }
+  .tl-role { font-size: 1.05rem; font-weight: 600; color: var(--white); margin-bottom: 0.2rem; }
+  .tl-company { font-size: 0.85rem; color: var(--gold); margin-bottom: 0.8rem; }
+  .tl-bullets { list-style: none; }
+  .tl-bullets li {
+    font-size: 0.85rem; color: var(--gray); line-height: 1.7;
+    padding-left: 1rem; position: relative; margin-bottom: 0.3rem;
+  }
+  .tl-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 0.75rem; top: 0.1rem; }
+  .tl-bullets li strong { color: var(--gold2); }
+
+  /* ─── EDUCATION ─── */
+  #education { background: var(--navy2); }
+  .edu-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.2rem; margin-top: 2.5rem; }
+  .edu-card {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    transition: all 0.2s;
+  }
+  .edu-card:hover { border-color: var(--gold); box-shadow: var(--glow); }
+  .edu-type { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gold); margin-bottom: 0.5rem; font-family: 'DM Mono', monospace; }
+  .edu-degree { font-size: 1rem; font-weight: 600; color: var(--white); margin-bottom: 0.3rem; }
+  .edu-school { font-size: 0.85rem; color: var(--gray); }
+  .edu-date { font-size: 0.75rem; color: var(--gray2); font-family: 'DM Mono', monospace; margin-top: 0.6rem; }
+
+  /* ─── CONTACT ─── */
+  #contact {
+    background: linear-gradient(135deg, var(--navy3) 0%, #0a0f1e 100%);
+    border-top: 1px solid var(--border);
+  }
+  .contact-inner { text-align: center; padding: 6rem 3rem; max-width: 700px; margin: 0 auto; }
+  .contact-inner .section-title { font-size: clamp(2rem, 4vw, 3.5rem); }
+  .contact-inner .section-sub { margin: 1rem auto 2.5rem; }
+  .contact-email {
+    display: inline-flex; align-items: center; gap: 0.8rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 1rem;
+    color: var(--gold2);
+    text-decoration: none;
+    border: 1px solid var(--border);
+    padding: 1rem 2rem;
+    border-radius: 4px;
+    transition: all 0.25s;
+    margin-bottom: 2.5rem;
+  }
+  .contact-email:hover { border-color: var(--gold); background: rgba(201,168,76,0.06); box-shadow: var(--glow); }
+  .footer-line { font-size: 0.75rem; color: var(--gray2); margin-top: 3rem; }
+  .footer-line span { color: var(--gold); }
+
+  /* ─── SCROLL REVEAL ─── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { gap: 1.2rem; }
+    .hero-visual { display: none; }
+    .section-inner { padding: 4rem 1.5rem; }
+    .about-grid, .skills-outer { grid-template-columns: 1fr; gap: 2.5rem; }
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+    .charts-grid, .charts-grid-3 { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .edu-grid { grid-template-columns: 1fr; }
+    .insights-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .nav-links { display: none; }
+    .kpi-row { grid-template-columns: 1fr; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    h1.hero-name { font-size: 3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ─── NAV ─── -->
+<nav>
+  <div class="nav-logo">PN.</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#project">Project</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ─── HERO ─── -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-tag">Available for Opportunities</div>
+    <h1 class="hero-name">Prince<em>Ndionyenmah</em></h1>
+    <p class="hero-title">
+      Data Analyst &amp; Quality Specialist with <strong>6+ years</strong> driving operational excellence through
+      data-driven insights, interactive dashboards, and strategic decision-making.
+    </p>
+    <div class="hero-cta">
+      <a href="#project" class="btn btn-primary">View Featured Project</a>
+      <a href="mailto:ugochukwundionyenmah@gmail.com" class="btn btn-outline">Get In Touch</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num" data-count="6">0</div>
+        <div class="hero-stat-label">Years Experience</div>
+      </div>
+      <div>
+        <div class="hero-stat-num" data-count="120">0</div>
+        <div class="hero-stat-label">Calls Audited / Week</div>
+      </div>
+      <div>
+        <div class="hero-stat-num" data-count="40">0</div>
+        <div class="hero-stat-label">% Reporting Visibility ↑</div>
+      </div>
+      <div>
+        <div class="hero-stat-num" data-count="35">0</div>
+        <div class="hero-stat-label">% QA Consistency ↑</div>
+      </div>
+    </div>
+  </div>
+  <!-- floating data badges -->
+  <div class="hero-visual" aria-hidden="true">
+    <div class="data-badge b1">
+      <span style="font-size:0.68rem;color:var(--gray);margin-bottom:2px;display:block;">TOTAL REVENUE</span>
+      <span class="badge-val">$2.30M</span>
+    </div>
+    <div class="data-badge b2">
+      <span style="font-size:0.68rem;color:var(--gray);margin-bottom:2px;display:block;">PROFIT MARGIN</span>
+      <span class="badge-val">12.4%</span>
+    </div>
+    <div class="data-badge b3">
+      <span style="font-size:0.68rem;color:var(--gray);margin-bottom:2px;display:block;">PEAK SALES MONTH</span>
+      <span class="badge-val">November</span>
+    </div>
+    <div class="data-badge b4">
+      <span style="font-size:0.68rem;color:var(--gray);margin-bottom:2px;display:block;">UNITS ANALYZED</span>
+      <span class="badge-val">37.9K</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── ABOUT ─── -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label reveal">Who I Am</div>
+    <h2 class="section-title reveal">Turning raw data into<br/><em style="font-style:italic;color:var(--gold)">decisive action.</em></h2>
+    <div class="divider reveal"></div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>With over <strong>six years in the BPO industry</strong>, I bridge the gap between raw operational data and strategic business decisions. My career spans quality assurance, lead distribution, telesales analytics, and data engineering — giving me an unusually complete view of how data flows through high-performance organizations.</p>
+        <p>As a <strong>Data Analyst at Outsource Global Technologies</strong> and concurrently a <strong>Quality Analyst & Lead Distribution Specialist at Premier Producers Group</strong>, I design dashboards, build QA frameworks, and manage real-time lead ecosystems for teams of 100–200 agents daily.</p>
+        <p>I don't just report numbers — I build the systems that make numbers <strong>understandable, actionable, and impactful</strong>.</p>
+        <div class="about-chips">
+          <span class="chip">Power BI</span><span class="chip">SQL</span><span class="chip">Tableau</span>
+          <span class="chip">Looker Studio</span><span class="chip">Excel</span><span class="chip">HubSpot</span>
+          <span class="chip">Salesforce</span><span class="chip">Vici Dialer</span><span class="chip">Python</span>
+        </div>
+      </div>
+      <div class="about-highlights reveal reveal-delay-2">
+        <div class="highlight-card">
+          <div class="hc-icon">📊</div>
+          <h4>Dashboard Architecture</h4>
+          <p>Built interactive QA and operational dashboards that improved reporting visibility by 40% and decision-making speed by 30% across cross-functional teams.</p>
+        </div>
+        <div class="highlight-card">
+          <div class="hc-icon">🎯</div>
+          <h4>Quality Engineering</h4>
+          <p>Designed QA scorecards that raised scoring consistency by 35% and evaluated 120+ telesales calls weekly, improving compliance standards by 17% in 60 days.</p>
+        </div>
+        <div class="highlight-card">
+          <div class="hc-icon">⚡</div>
+          <h4>Operational Optimization</h4>
+          <p>Managed lead distribution for 100–200 agents daily, reducing downtime by 25% and improving productivity by 15% through proactive real-time monitoring.</p>
+        </div>
+        <div class="highlight-card">
+          <div class="hc-icon">🌍</div>
+          <h4>Multi-Industry Expertise</h4>
+          <p>Experience across insurance, debt resolution, solar energy, disability services, and e-commerce — fluent in the data language of each vertical.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── STATS STRIP ─── -->
+<section id="stats-strip">
+  <div class="stats-grid">
+    <div class="stat-box reveal">
+      <span class="snum" data-count="6">0</span>
+      <span class="slabel">Years in Industry</span>
+    </div>
+    <div class="stat-box reveal reveal-delay-1">
+      <span class="snum" data-count="17">0</span>
+      <span class="slabel">% Quality Improvement</span>
+    </div>
+    <div class="stat-box reveal reveal-delay-2">
+      <span class="snum" data-count="25">0</span>
+      <span class="slabel">% Downtime Reduced</span>
+    </div>
+    <div class="stat-box reveal reveal-delay-3">
+      <span class="snum" data-count="35">0</span>
+      <span class="slabel">% QA Consistency ↑</span>
+    </div>
+    <div class="stat-box reveal" style="transition-delay:0.4s">
+      <span class="snum" data-count="40">0</span>
+      <span class="slabel">% Reporting Visibility ↑</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── FEATURED PROJECT ─── -->
+<section id="project">
+  <div class="section-inner">
+    <div class="project-header">
+      <div>
+        <div class="section-label reveal">Featured Project</div>
+        <h2 class="section-title reveal">SmartMart Superstore<br/><em style="font-style:italic;color:var(--gold)">Business Intelligence Dashboard</em></h2>
+        <div class="project-meta reveal">
+          <span class="meta-tag">Power BI</span>
+          <span class="meta-tag">Data Cleaning</span>
+          <span class="meta-tag">15 Business Questions</span>
+          <span class="meta-tag">2014–2017 Dataset</span>
+          <span class="meta-tag">TechCrush Analytics</span>
+        </div>
+      </div>
+      <div class="reveal" style="text-align:right">
+        <p style="font-size:0.8rem;color:var(--gray);max-width:280px;line-height:1.7">
+          A full-scale retail analytics project answering 15 strategic business questions through interactive Power BI dashboards, presented to SmartMart's Chief Business Officer.
+        </p>
+      </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="kpi-row">
+      <div class="kpi-card reveal">
+        <span class="kpi-badge">Q1 · REVENUE</span>
+        <div class="kpi-val" data-count-k="2.30">$0</div>
+        <div class="kpi-label">Total Sales Revenue</div>
+        <div class="kpi-sub">Across all regions, 2014–2017 · +51% YoY growth</div>
+      </div>
+      <div class="kpi-card teal reveal reveal-delay-1">
+        <span class="kpi-badge">Q1 · PROFIT</span>
+        <div class="kpi-val" data-count-k="286">$0</div>
+        <div class="kpi-label">Total Profit Generated</div>
+        <div class="kpi-sub">12.4% profit margin · $93K peak in 2017</div>
+      </div>
+      <div class="kpi-card coral reveal reveal-delay-2">
+        <span class="kpi-badge">Q1 · VOLUME</span>
+        <div class="kpi-val" data-countraw="37.9K">0</div>
+        <div class="kpi-label">Total Units Sold</div>
+        <div class="kpi-sub">Across 3 categories · Technology leads at 36.4%</div>
+      </div>
+    </div>
+
+    <!-- Charts Row 1 -->
+    <div class="charts-grid reveal">
+      <div class="chart-card">
+        <div class="chart-title">Yearly Sales & Profit Trend</div>
+        <div class="chart-qnum">Q2</div>
+        <div class="chart-canvas-wrap tall"><canvas id="yearlyChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Sales by Customer Segment</div>
+        <div class="chart-qnum">Q4</div>
+        <div class="chart-canvas-wrap tall"><canvas id="segmentChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Charts Row 2 -->
+    <div class="charts-grid-3 reveal" style="margin-top:1.5rem">
+      <div class="chart-card">
+        <div class="chart-title">Sales by Category</div>
+        <div class="chart-qnum">Q10</div>
+        <div class="chart-canvas-wrap"><canvas id="categoryChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Regional Performance</div>
+        <div class="chart-qnum">Q12</div>
+        <div class="chart-canvas-wrap"><canvas id="regionChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Shipping Mode Profitability</div>
+        <div class="chart-qnum">Q15</div>
+        <div class="chart-canvas-wrap"><canvas id="shippingChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Charts Row 3 -->
+    <div class="charts-grid reveal" style="margin-top:1.5rem">
+      <div class="chart-card">
+        <div class="chart-title">Monthly Sales & Profit Trend</div>
+        <div class="chart-qnum">Q2 · Q7</div>
+        <div class="chart-canvas-wrap tall"><canvas id="monthlyChart"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">High-Discount Sub-categories vs Profit</div>
+        <div class="chart-qnum">Q6 · Q14</div>
+        <div class="chart-canvas-wrap tall"><canvas id="discountChart"></canvas></div>
+      </div>
+    </div>
+
+    <!-- Insights -->
+    <div class="insights-row reveal" style="margin-top:2rem">
+      <div class="insight-item">
+        <div class="insight-icon">📈</div>
+        <div class="insight-text"><strong>Sales grew 51%</strong> from $484K in 2014 to $733K in 2017. November is the peak month at <strong>$352K</strong> — a key seasonal opportunity for inventory planning.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon">⚠️</div>
+        <div class="insight-text"><strong>Tables carry a 26% avg discount</strong> yet generate <strong>−$17.7K profit</strong>. Recommendation: cap furniture discounts at 15% to protect margins.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon">🌍</div>
+        <div class="insight-text"><strong>West region leads</strong> with $725K sales and $108K profit, while Texas ($170K sales) generates a <strong>−$25.7K loss</strong> — a critical area for strategic review.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon">👥</div>
+        <div class="insight-text"><strong>Consumer segment drives 49.7%</strong> of total revenue at $1.16M. Standard Class shipping handles 78% of orders, generating <strong>$164K profit</strong>.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── SKILLS ─── -->
+<section id="skills">
+  <div class="section-inner">
+    <div class="section-label reveal">Capabilities</div>
+    <h2 class="section-title reveal">Skills & <em style="font-style:italic;color:var(--gold)">Toolbox</em></h2>
+    <div class="divider reveal"></div>
+    <div class="skills-outer">
+      <div>
+        <div class="skill-group reveal">
+          <h3>Analytics & Visualization</h3>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Power BI</span><span class="skill-pct">92%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="92"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Microsoft Excel</span><span class="skill-pct">95%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="95"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Tableau</span><span class="skill-pct">82%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="82"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Looker Studio (Google)</span><span class="skill-pct">85%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="85"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">SQL / MS-SQL</span><span class="skill-pct">78%</span></div>
+            <div class="skill-bar"><div class="skill-fill teal" data-w="78"></div></div>
+          </div>
+        </div>
+        <div class="skill-group reveal" style="margin-top:2.5rem">
+          <h3>Quality & Operations</h3>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Call Quality Assurance</span><span class="skill-pct">96%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="96"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">QA Scorecard Design</span><span class="skill-pct">93%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="93"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Lead Distribution</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-w="90"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-header"><span class="skill-name">Dashboard Development</span><span class="skill-pct">88%</span></div>
+            <div class="skill-bar"><div class="skill-fill teal" data-w="88"></div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="skill-group reveal reveal-delay-2">
+          <h3>Platforms & Tools</h3>
+          <div class="tools-grid">
+            <div class="tool-pill">HubSpot</div>
+            <div class="tool-pill">Salesforce</div>
+            <div class="tool-pill">Zoho CRM</div>
+            <div class="tool-pill">Airtable</div>
+            <div class="tool-pill">Freshdesk</div>
+            <div class="tool-pill">Vici Dialer</div>
+            <div class="tool-pill">RingCentral</div>
+            <div class="tool-pill">Dynamics CRM</div>
+            <div class="tool-pill">Google Suite</div>
+            <div class="tool-pill">MS Office</div>
+            <div class="tool-pill">Zoom</div>
+            <div class="tool-pill">Slack</div>
+          </div>
+        </div>
+        <div class="skill-group reveal reveal-delay-2" style="margin-top:2.5rem">
+          <h3>Core Competencies</h3>
+          <div style="display:flex;flex-direction:column;gap:0.7rem;margin-top:0.5rem">
+            <div class="insight-item" style="padding:0.8rem 1rem">
+              <div style="font-size:1rem">🎯</div>
+              <div style="font-size:0.82rem;color:var(--gray)">Data-driven decision making & trend analysis</div>
+            </div>
+            <div class="insight-item" style="padding:0.8rem 1rem">
+              <div style="font-size:1rem">📋</div>
+              <div style="font-size:0.82rem;color:var(--gray)">Real-time operational monitoring & reporting</div>
+            </div>
+            <div class="insight-item" style="padding:0.8rem 1rem">
+              <div style="font-size:1rem">🧠</div>
+              <div style="font-size:0.82rem;color:var(--gray)">Cross-functional collaboration & coaching</div>
+            </div>
+            <div class="insight-item" style="padding:0.8rem 1rem">
+              <div style="font-size:1rem">📊</div>
+              <div style="font-size:0.82rem;color:var(--gray)">Pipeline optimization & compliance management</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── EXPERIENCE ─── -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-label reveal">Career Timeline</div>
+    <h2 class="section-title reveal">Work <em style="font-style:italic;color:var(--gold)">Experience</em></h2>
+    <div class="divider reveal"></div>
+    <div class="timeline">
+
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Jul 2025 – Present · Missouri, USA</div>
+        <div class="tl-role">Lead Distribution Specialist</div>
+        <div class="tl-company">Premier Producers Group</div>
+        <ul class="tl-bullets">
+          <li>Managed daily lead distribution for <strong>100–200 active agents</strong>, optimizing dialer settings and campaign structures.</li>
+          <li>Reduced downtime by <strong>25%</strong> through proactive real-time inbound lead flow monitoring.</li>
+          <li>Improved team productivity by <strong>15%</strong> through optimized scheduling and lead-to-agent ratios.</li>
+          <li>Accelerated return-to-operation time by <strong>30%</strong> through systematic shift restart protocols.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-dot teal"></div>
+        <div class="tl-meta">Dec 2024 – Present · Missouri, USA</div>
+        <div class="tl-role">Quality Analyst</div>
+        <div class="tl-company">Premier Producers Group</div>
+        <ul class="tl-bullets">
+          <li>Evaluated <strong>120+ telesales calls weekly</strong>, improving compliance by <strong>17%</strong> within 60 days.</li>
+          <li>Designed QA scorecards that increased scoring consistency across teams by <strong>35%</strong>.</li>
+          <li>Built integrated dashboards improving reporting visibility by <strong>40%</strong>.</li>
+          <li>Delivered targeted coaching reducing repeated errors by <strong>22%</strong> and boosting script adherence.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Jan 2023 – Present · Abuja, Nigeria</div>
+        <div class="tl-role">Data Analyst</div>
+        <div class="tl-company">Outsource Global Technologies</div>
+        <ul class="tl-bullets">
+          <li>Analyzed multi-source campaign data, improving reporting accuracy by <strong>20%</strong>.</li>
+          <li>Developed dashboards and visual reports enhancing decision-making speed by <strong>30%</strong>.</li>
+          <li>Audited and validated datasets to ensure data quality and integrity across campaigns.</li>
+          <li>Led the SmartMart Superstore BI project — answering <strong>15 business questions</strong> via Power BI dashboards.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-dot teal"></div>
+        <div class="tl-meta">Jan 2024 – May 2024 · CA, USA</div>
+        <div class="tl-role">Customer Service Representative</div>
+        <div class="tl-company">Calltastic (Venus Et Fleur)</div>
+        <ul class="tl-bullets">
+          <li>Maintained a <strong>95–98% CSAT score</strong> across 12 months of service.</li>
+          <li>Resolved 30–60+ daily inquiries; reduced ticket backlog by <strong>22%</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-dot"></div>
+        <div class="tl-meta">Dec 2020 – Mar 2022 · MA, USA</div>
+        <div class="tl-role">Call Centre Quality Auditor</div>
+        <div class="tl-company">Citizens Disability</div>
+        <ul class="tl-bullets">
+          <li>Developed QA performance models that increased compliance by <strong>22%</strong>.</li>
+          <li>Delivered coaching sessions that improved agent quality scores by <strong>19%</strong>.</li>
+        </ul>
+      </div>
+
+      <div class="tl-item reveal">
+        <div class="tl-dot teal"></div>
+        <div class="tl-meta">Aug 2021 – Nov 2022 · KS, USA</div>
+        <div class="tl-role">Solar Energy Sales Consultant</div>
+        <div class="tl-company">Artisun Solar</div>
+        <ul class="tl-bullets">
+          <li>Improved solar lead conversion by <strong>12%</strong> through stronger qualification processes.</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ─── EDUCATION ─── -->
+<section id="education">
+  <div class="section-inner">
+    <div class="section-label reveal">Credentials</div>
+    <h2 class="section-title reveal">Education & <em style="font-style:italic;color:var(--gold)">Certifications</em></h2>
+    <div class="divider reveal"></div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-type">🎓 Bachelor's Degree</div>
+        <div class="edu-degree">BSc Business Administration</div>
+        <div class="edu-school">Nnamdi Azikiwe University, Awka, Nigeria</div>
+        <div class="edu-date">Apr 2013 – Aug 2016</div>
+      </div>
+      <div class="edu-card reveal reveal-delay-1">
+        <div class="edu-type">📜 National Diploma</div>
+        <div class="edu-degree">National Diploma in Business Administration</div>
+        <div class="edu-school">Nnamdi Azikiwe University, Awka, Nigeria</div>
+        <div class="edu-date">Dec 2011 – Mar 2013</div>
+      </div>
+      <div class="edu-card reveal reveal-delay-2">
+        <div class="edu-type">🏅 Certification</div>
+        <div class="edu-degree">Data Analysis</div>
+        <div class="edu-school">Udacity · udacity.com</div>
+        <div class="edu-date">Jul 2022 – Oct 2022 · CA, USA</div>
+      </div>
+      <div class="edu-card reveal reveal-delay-3">
+        <div class="edu-type">🏅 Certification</div>
+        <div class="edu-degree">Virtual Assistance</div>
+        <div class="edu-school">ALX – The Room · alxafrica.com</div>
+        <div class="edu-date">Aug 2022 – Sep 2022 · Lagos, Nigeria</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-label reveal" style="text-align:center">Let's Connect</div>
+    <h2 class="section-title reveal">Ready to make<br/><em style="font-style:italic;color:var(--gold)">data work for you?</em></h2>
+    <p class="section-sub reveal" style="margin:1rem auto 2rem;text-align:center">
+      Whether you're looking for a data analyst, quality specialist, or someone who can turn complex operational data into clear business decisions — let's talk.
+    </p>
+    <a href="mailto:ugochukwundionyenmah@gmail.com" class="contact-email reveal">
+      <span>✉</span> ugochukwundionyenmah@gmail.com
+    </a>
+    <div class="footer-line reveal">
+      Built by <span>Prince Ndionyenmah</span> · Data Analyst & Quality Specialist
+      <br/>SmartMart Project · TechCrush Analytics · 2025
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── CHART.JS DEFAULTS ───
+Chart.defaults.color = '#94a3b8';
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.size = 11;
+
+const GOLD = '#c9a84c', GOLD2 = '#e8c56d', TEAL = '#2dd4bf', CORAL = '#e05c4b', GRAY = '#94a3b8', NAVY3 = '#1a2235';
+
+function makeGradient(ctx, color1, color2) {
+  const g = ctx.createLinearGradient(0, 0, 0, 250);
+  g.addColorStop(0, color1); g.addColorStop(1, color2);
+  return g;
+}
+
+// ─── YEARLY TREND ───
+new Chart(document.getElementById('yearlyChart'), {
+  type: 'bar',
+  data: {
+    labels: ['2014','2015','2016','2017'],
+    datasets: [
+      { label: 'Sales ($K)', data: [484, 471, 609, 733], backgroundColor: GOLD, borderRadius: 4, order: 2 },
+      { label: 'Profit ($K)', data: [50, 62, 82, 93], type: 'line', borderColor: TEAL, backgroundColor: 'rgba(45,212,191,0.1)', tension: 0.4, pointRadius: 5, pointBackgroundColor: TEAL, fill: true, order: 1 }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, boxWidth:10, padding:16 }}}, scales:{ x:{ grid:{ color:'rgba(255,255,255,0.04)' }}, y:{ grid:{ color:'rgba(255,255,255,0.04)' }}}}
+});
+
+// ─── SEGMENT ───
+new Chart(document.getElementById('segmentChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Consumer','Corporate','Home Office'],
+    datasets: [{ data: [1161, 706, 430], backgroundColor: [GOLD, TEAL, CORAL], borderWidth: 0, hoverOffset: 6 }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, padding:14, boxWidth:10 }}}}
+});
+
+// ─── CATEGORY ───
+new Chart(document.getElementById('categoryChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Technology','Furniture','Office Supplies'],
+    datasets: [{ data: [36.4, 32.3, 31.3], backgroundColor: ['#c9a84c','#4a6fa5','#2dd4bf'], borderWidth: 0, hoverOffset: 5 }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, cutout:'55%', plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, padding:10, boxWidth:8 }}}}
+});
+
+// ─── REGIONAL ───
+new Chart(document.getElementById('regionChart'), {
+  type: 'bar',
+  data: {
+    labels: ['West','East','Central','South'],
+    datasets: [
+      { label: 'Sales($K)', data: [725, 679, 501, 392], backgroundColor: [GOLD, GOLD, GOLD, GOLD], borderRadius: 3 },
+      { label: 'Profit($K)', data: [108, 92, 40, 47], backgroundColor: [TEAL, TEAL, TEAL, TEAL], borderRadius: 3 }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, boxWidth:8, padding:10 }}}, scales:{ x:{ grid:{ display:false }}, y:{ grid:{ color:'rgba(255,255,255,0.04)' }}}}
+});
+
+// ─── SHIPPING ───
+new Chart(document.getElementById('shippingChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Standard','Second','First','Same Day'],
+    datasets: [{ label: 'Profit ($K)', data: [164, 57, 49, 16], backgroundColor: [GOLD, GOLD2, TEAL, CORAL], borderRadius: 4 }]
+  },
+  options: { responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{ display:false }}, scales:{ x:{ grid:{ color:'rgba(255,255,255,0.04)' }}, y:{ grid:{ display:false }}}}
+});
+
+// ─── MONTHLY ───
+new Chart(document.getElementById('monthlyChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    datasets: [
+      { label: 'Sales ($K)', data: [95,60,205,138,155,153,147,159,308,200,352,325], borderColor: GOLD, backgroundColor: 'rgba(201,168,76,0.08)', tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: GOLD },
+      { label: 'Profit ($K)', data: [9,10,29,12,22,21,14,22,37,32,35,43], borderColor: TEAL, backgroundColor: 'rgba(45,212,191,0.06)', tension: 0.4, fill: true, pointRadius: 3, pointBackgroundColor: TEAL }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, boxWidth:10, padding:14 }}}, scales:{ x:{ grid:{ color:'rgba(255,255,255,0.04)' }}, y:{ grid:{ color:'rgba(255,255,255,0.04)' }}}}
+});
+
+// ─── DISCOUNT ───
+new Chart(document.getElementById('discountChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Tables','Bookcases','Supplies','Fasteners','Machines'],
+    datasets: [
+      { label: 'Avg Discount %', data: [26,21,8,8,31], backgroundColor: '#f59e0b', borderRadius: 3 },
+      { label: 'Profit ($K)', data: [-17.7,-3.5,-1.2,0.9,3.4], backgroundColor: CORAL, borderRadius: 3 }
+    ]
+  },
+  options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom', labels:{ color:GRAY, boxWidth:10, padding:14 }}}, scales:{ x:{ grid:{ display:false }}, y:{ grid:{ color:'rgba(255,255,255,0.04)' }}}}
+});
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ─── COUNTER ANIMATION ───
+function animateCounter(el, target, suffix='', prefix='') {
+  let start = 0, duration = 1800, startTime = null;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 3);
+    const val = target % 1 !== 0 ? (ease * target).toFixed(1) : Math.round(ease * target);
+    el.textContent = prefix + val + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + target + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+const counterObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const el = e.target;
+      if (el.dataset.count) animateCounter(el, parseInt(el.dataset.count), '+');
+      if (el.dataset.countK) animateCounter(el, parseFloat(el.dataset.countK), 'M', '$');
+      if (el.dataset.countraw) { el.textContent = el.dataset.countraw; }
+      if (el.dataset.count && !el.dataset.countK) {
+        // strip suffix and animate
+        animateCounter(el, parseInt(el.dataset.count), '');
+      }
+      counterObs.unobserve(el);
+    }
+  });
+}, { threshold: 0.5 });
+
+document.querySelectorAll('[data-count],[data-count-k],[data-countraw]').forEach(el => counterObs.observe(el));
+
+// fix: data-count elements in stats strip
+document.querySelectorAll('[data-count]').forEach(el => {
+  counterObs.observe(el);
+});
+
+// ─── SKILL BAR ANIMATION ───
+const skillObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.querySelectorAll('.skill-fill').forEach(bar => {
+        setTimeout(() => { bar.style.width = bar.dataset.w + '%'; }, 100);
+      });
+      skillObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+document.querySelectorAll('.skill-group').forEach(g => skillObs.observe(g));
+
+// ─── NAV ACTIVE ───
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.background = window.scrollY > 50 ? 'rgba(10,15,30,0.97)' : 'rgba(10,15,30,0.85)';
+});
+</script>
+</body>
+</html>
